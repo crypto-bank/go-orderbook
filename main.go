@@ -9,8 +9,6 @@ import (
 	"google.golang.org/grpc/grpclog"
 
 	"github.com/crypto-bank/go-orderbook/server"
-	"github.com/crypto-bank/proto/currency"
-	"github.com/crypto-bank/proto/exchange"
 	"github.com/crypto-bank/proto/orderbook"
 	"github.com/golang/glog"
 )
@@ -35,13 +33,6 @@ func main() {
 	// Defer closing a server
 	defer func() {
 		if err := srv.Close(); err != nil {
-			glog.Fatal(err)
-		}
-	}()
-
-	// Start syncing history in background
-	go func() {
-		if err := server.StartSyncingHistory(srv, exchange.Poloniex, currency.NewPair("BTC", "XRP")); err != nil {
 			glog.Fatal(err)
 		}
 	}()
