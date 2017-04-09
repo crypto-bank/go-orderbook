@@ -30,6 +30,15 @@ func New(path string) (server *Server, err error) {
 	}, nil
 }
 
+// NewIterator - Creates a new iterator for given currency pair on exchange.
+func (server *Server) NewIterator(ex exchange.Exchange, pair *currency.Pair) (_ *Iterator, err error) {
+	db, err := server.openDB(ex, pair)
+	if err != nil {
+		return
+	}
+	return db.NewIterator(), nil
+}
+
 // Read - Starts streaming real-time updates of an order book,
 // and all trades happening in real-time.
 // Batches are sent in `MaxBatchSize` when reading from history,

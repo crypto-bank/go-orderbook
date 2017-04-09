@@ -11,6 +11,7 @@ import (
 	"github.com/crypto-bank/proto/order"
 	"github.com/golang/glog"
 	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 // pairDatabase - Single currency pair database.
@@ -112,6 +113,13 @@ func (db *pairDatabase) WriteTrades(trades []*order.Trade) (err error) {
 	}
 
 	return
+}
+
+// NewIterator - Creates a new iterator of whole database.
+func (db *pairDatabase) NewIterator() *Iterator {
+	return &Iterator{
+		Iterator: db.db.NewIterator(&util.Range{Limit: []byte("_")}, nil),
+	}
 }
 
 // Close - Closes leveldb database.
