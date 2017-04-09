@@ -68,7 +68,7 @@ func SyncHistory(server *Server, ex exchange.Exchange, pair *currency.Pair, keep
 
 func fetchHistory(req poloniex.HistoryRequest) (_ <-chan []*order.Trade) {
 	// Create results channel
-	results := make(chan []*order.Trade, 10)
+	results := make(chan []*order.Trade, 1)
 
 	// Get all trades in goroutine
 	go func() {
