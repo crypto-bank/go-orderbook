@@ -10,7 +10,8 @@ import (
 
 // Server - Orderbook service server.
 type Server struct {
-	opts *Options
+	// path - Database path.
+	path string
 
 	// dbs - Map of databases by exchange/pair ID.
 	dbs map[string]*pairDatabase
@@ -19,20 +20,11 @@ type Server struct {
 	dbsMutex *sync.RWMutex
 }
 
-// Options - Orderbook service server options.
-type Options struct {
-	// DatabasePath - LevelDB database path.
-	DatabasePath string
-
-	// BackLogSize - LevelDB backlog events amount.
-	BackLogSize int
-}
-
 // New - Constructs new orderbook service server.
 // Opens on-disk LevelDB database and syncs in-memory databases.
-func New(opts *Options) (server *Server, err error) {
+func New(path string) (server *Server, err error) {
 	return &Server{
-		opts:     opts,
+		path:     path,
 		dbs:      make(map[string]*pairDatabase),
 		dbsMutex: new(sync.RWMutex),
 	}, nil
@@ -70,7 +62,7 @@ func (server *Server) openDB(ex exchange.Exchange, pair *currency.Pair) (db *pai
 	if ok {
 		return db, nil
 	}
-	db, err = openPairDatabase(server.opts.DatabasePath, ex, pair)
+	db, err = openPairDatabase(server.path, ex, pair)
 	if err != nil {
 		return
 	}

@@ -27,9 +27,7 @@ func main() {
 	defer glog.Flush()
 
 	// Create a new server
-	srv, err := server.New(&server.Options{
-		DatabasePath: *dbPath,
-	})
+	srv, err := server.New(*dbPath)
 	if err != nil {
 		glog.Fatal(err)
 	}
