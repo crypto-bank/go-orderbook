@@ -6,6 +6,7 @@ import (
 	"github.com/crypto-bank/proto/currency"
 	"github.com/crypto-bank/proto/exchange"
 	"github.com/crypto-bank/proto/orderbook"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 // Server - Orderbook service server.
@@ -28,6 +29,15 @@ func New(path string) (server *Server, err error) {
 		dbs:      make(map[string]*pairDatabase),
 		dbsMutex: new(sync.RWMutex),
 	}, nil
+}
+
+// Compact - Compacts exchange and currency pair database.
+func (server *Server) Compact(ex exchange.Exchange, pair *currency.Pair) (err error) {
+	db, err := server.openDB(ex, pair)
+	if err != nil {
+		return
+	}
+	return db.db.CompactRange(util.Range{})
 }
 
 // NewIterator - Creates a new iterator for given currency pair on exchange.
