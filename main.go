@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/golang/glog"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/grpclog"
 
 	"github.com/crypto-bank/go-orderbook/server"
 	"github.com/crypto-bank/proto/orderbook"
-	"github.com/golang/glog"
 )
 
 var (
@@ -40,7 +39,7 @@ func main() {
 	// Start TCP listener
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		grpclog.Fatalf("failed to listen: %v", err)
+		glog.Fatalf("failed to listen: %v", err)
 	}
 
 	// Create new gRPC server

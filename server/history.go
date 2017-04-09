@@ -41,11 +41,16 @@ func StartSyncingHistory(server *Server, ex exchange.Exchange, pair *currency.Pa
 		results := fetchHistory(req)
 
 		// Write received trades in batches
+		var sum int
 		for batch := range results {
+			sum += len(batch)
+			glog.V(3).Infof("Fetched %d trades", len(batch))
 			if err := db.WriteTrades(batch); err != nil {
 				glog.Errorf("Trades write error: %v", err)
 			}
 		}
+
+		glog.Infof("Inserted %d new trades", sum)
 
 		// If we hit this point it means we have synced
 		// entire history to the point of `db.highestTimestamp`.
