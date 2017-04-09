@@ -11,10 +11,10 @@ import (
 	"github.com/golang/glog"
 )
 
-// StartSyncingHistory - Syncs server trades history.
+// SyncHistory - Syncs server trades history.
 // Should be ran in a separate goroutine, should never exit.
 // Syncs history every 60 seconds.
-func StartSyncingHistory(server *Server, ex exchange.Exchange, pair *currency.Pair) error {
+func SyncHistory(server *Server, ex exchange.Exchange, pair *currency.Pair, keepSyncing bool) error {
 	// Get database handle
 	db, err := server.openDB(ex, pair)
 	if err != nil {
@@ -56,6 +56,10 @@ func StartSyncingHistory(server *Server, ex exchange.Exchange, pair *currency.Pa
 		// entire history to the point of `db.highestTimestamp`.
 		// Now we have to sync from the point of it to `now`.
 		db.setHistorySynced()
+
+		if !keepSyncing {
+			return nil
+		}
 
 		// Repeat after 15 seconds
 		<-time.After(time.Second * 15)

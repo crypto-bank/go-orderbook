@@ -5,9 +5,10 @@ import (
 
 	"github.com/golang/glog"
 
-	"github.com/crypto-bank/go-orderbook/server"
 	"github.com/crypto-bank/proto/currency"
 	"github.com/crypto-bank/proto/exchange"
+
+	"github.com/crypto-bank/go-orderbook/server"
 )
 
 var (
@@ -46,7 +47,7 @@ func main() {
 	}
 
 	// Start syncing history
-	err = server.StartSyncingHistory(srv, exchange.Poloniex, pair)
+	err = server.SyncHistory(srv, exchange.Poloniex, pair, false)
 	if err != nil {
 		glog.Fatal(err)
 	}
