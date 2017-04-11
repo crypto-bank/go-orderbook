@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	compact      = flag.Bool("compact", false, "Compact database")
 	dbPath       = flag.String("db-path", "/tmp/orderbook", "Database path")
 	currencyPair = flag.String("currency-pair", "", "Currency pair separated with \"_\"")
 )
@@ -50,5 +51,13 @@ func main() {
 	err = server.SyncHistory(srv, exchange.Poloniex, pair, false)
 	if err != nil {
 		glog.Fatal(err)
+	}
+
+	// Compact database on --compact flag
+	if *compact {
+		err = srv.Compact(exchange.Poloniex, pair)
+		if err != nil {
+			glog.Fatal(err)
+		}
 	}
 }
